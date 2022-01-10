@@ -4,8 +4,8 @@ int motorPins[4] = {5, 6, 8, 9};
 int triggerPin = 13;
 int echoPin = 12;
 
-int rightMotorSpeedPin = 11;
-int leftMotorSpeedPin = 10;
+int rightMotorSpeedPin = 4;
+int leftMotorSpeedPin = 7;
 
 int distanceInCm = 0;
 int maxSpeed = 0;
