@@ -29,6 +29,14 @@ int readUltrasonicDistance(int triggerPin_, int echoPin_)
     return (measured / 2) * 0.03432;
 }
 
+void stop(int int rMotorPin1_, int rMotorPin2_, int lMotorPin1_, int lMotorPin2_, int rMotorSpeedPin_, int lMotorSpeedPin_)
+{
+    digitalWrite(rMotorPin1_, LOW);
+    digitalWrite(rMotorPin2_, LOW);
+    digitalWrite(lMotorPin1_, LOW);
+    digitalWrite(lMotorPin2_, LOW);
+}
+
 // Eine Funktion, die das Auto für eine vorgegebene Zeit [ms], Geschwindigkeit (0-255) und Richtung (Vorwärts = 'F'; Rückwärts='B') fahren lässt.
 void driveForTime(int speed_, int time_, char direction_, int rMotorPin1_, int rMotorPin2_, int lMotorPin1_, int lMotorPin2_, int rMotorSpeedPin_, int lMotorSpeedPin_)
 {
@@ -52,6 +60,7 @@ void driveForTime(int speed_, int time_, char direction_, int rMotorPin1_, int r
         digitalWrite(lMotorPin1_, HIGH);
         digitalWrite(lMotorPin2_, LOW);
         delay(time_);
+        stop(rMotorPin1_, rMotorPin2_, lMotorPin1_, lMotorPin2_);
         break;
     case 'B':
         // Rückwärts fahren
@@ -60,6 +69,7 @@ void driveForTime(int speed_, int time_, char direction_, int rMotorPin1_, int r
         digitalWrite(lMotorPin1_, LOW);
         digitalWrite(lMotorPin2_, HIGH);
         delay(time_);
+        stop(rMotorPin1_, rMotorPin2_, lMotorPin1_, lMotorPin2_);
         break;
     }
 }
@@ -92,6 +102,7 @@ void driveForDistance(int speed_, int distance_, char direction_, int maxSpeed_,
         digitalWrite(lMotorPin1_, HIGH);
         digitalWrite(lMotorPin2_, LOW);
         delay(time);
+        stop(rMotorPin1_, rMotorPin2_, lMotorPin1_, lMotorPin2_);
         break;
     case 'B':
         // Rückwärts fahren
@@ -100,6 +111,7 @@ void driveForDistance(int speed_, int distance_, char direction_, int maxSpeed_,
         digitalWrite(lMotorPin1_, LOW);
         digitalWrite(lMotorPin2_, HIGH);
         delay(time);
+        stop(rMotorPin1_, rMotorPin2_, lMotorPin1_, lMotorPin2_);
         break;
     }
 }
@@ -131,6 +143,7 @@ void turnForDegrees(char direction_, int dregree_, int timeForDegree_, int rMoto
         digitalWrite(lMotorPin1_, HIGH);
         digitalWrite(lMotorPin2_, LOW);
         delay(time);
+        stop(rMotorPin1_, rMotorPin2_, lMotorPin1_, lMotorPin2_);
         break;
     case 'L':
         // Nach links fahren
@@ -139,6 +152,7 @@ void turnForDegrees(char direction_, int dregree_, int timeForDegree_, int rMoto
         digitalWrite(lMotorPin1_, LOW);
         digitalWrite(lMotorPin2_, HIGH);
         delay(time);
+        stop(rMotorPin1_, rMotorPin2_, lMotorPin1_, lMotorPin2_);
         break;
     }
 }
