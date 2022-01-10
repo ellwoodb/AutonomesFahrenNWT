@@ -1,3 +1,4 @@
+// VARIABELN
 // Pin Definitionen
 int motorPins[4] = {5, 6, 8, 9};
 
@@ -7,10 +8,13 @@ int echoPin = 12;
 int rightMotorSpeedPin = 4;
 int leftMotorSpeedPin = 7;
 
+// Auto Definitionen
 int distanceInCm = 0;
 int maxSpeed = 0;
 int timeForDegree = 0;
+int carWidth = 0;
 
+// FUNKTIONEN
 // Eine Funktion, die den Ultraschall Sensor des Autos ausliest und in cm ausgibt.
 int readUltrasonicDistance(int triggerPin_, int echoPin_)
 {
@@ -29,7 +33,7 @@ int readUltrasonicDistance(int triggerPin_, int echoPin_)
     return (measured / 2) * 0.03432;
 }
 
-void stop(int int rMotorPin1_, int rMotorPin2_, int lMotorPin1_, int lMotorPin2_, int rMotorSpeedPin_, int lMotorSpeedPin_)
+void stop(int rMotorPin1_, int rMotorPin2_, int lMotorPin1_, int lMotorPin2_, int rMotorSpeedPin_, int lMotorSpeedPin_)
 {
     digitalWrite(rMotorPin1_, LOW);
     digitalWrite(rMotorPin2_, LOW);
@@ -157,12 +161,43 @@ void turnForDegrees(char direction_, int dregree_, int timeForDegree_, int rMoto
     }
 }
 
-/* 
-Aufgaben:
-1. 1m*1m Quadrat fahren
-2. xm Radius Kreis fahren
-3. Slalom fahren
-*/
+// Eine Funktion, die das Auto einen Kreis mit einem vorgegebenen Radius [m] und Geschwindigkeit (0-255) fahren lässt.
+void circle(int radius_, int speed_, int carWidth_, int rMotorPin1_, int rMotorPin2_, int lMotorPin1_, int lMotorPin2_, int rMotorSpeedPin_, int lMotorSpeedPin_)
+{
+    pinMode(rMotorPin1_, OUTPUT);
+    pinMode(rMotorPin2_, OUTPUT);
+    pinMode(lMotorPin1_, OUTPUT);
+    pinMode(lMotorPin2_, OUTPUT);
+    pinMode(rMotorSpeedPin_, OUTPUT);
+    pinMode(lMotorSpeedPin_, OUTPUT);
+
+    float pi = 3.14159;
+    int u = 2 * pi * radius_;
+    int halfCarWidth = carWidth_ / 2;
+
+    int ui = 2 * pi * (radius_ - halfCarWidth);
+    int ua = 2 * pi * (radius_ + halfCarWidth);
+
+    int t = 2 * pi / speed_;
+
+    int vi = ui / t;
+    int va = ua / t;
+
+    analogWrite(rMotorSpeedPin_, vi);
+    analogWrite(lMotorSpeedPin_, va);
+
+    digitalWrite(rMotorPin1_, HIGH);
+    digitalWrite(rMotorPin2_, LOW);
+    digitalWrite(lMotorPin1_, HIGH);
+    digitalWrite(lMotorPin2_, LOW);
+}
+
+// AUFGABEN
+void vorUndZurueck(int speed_, int lenght_)
+{
+    driveForDistance(speed_, lenght_, 'F', maxSpeed, motorPins[0], motorPins[1], motorPins[2], motorPins[3], rightMotorSpeedPin, leftMotorSpeedPin);
+    driveForDistance(speed_, lenght_, 'B', maxSpeed, motorPins[0], motorPins[1], motorPins[2], motorPins[3], rightMotorSpeedPin, leftMotorSpeedPin);
+}
 
 void quadrat(int speed_, int lenght_)
 {
@@ -176,10 +211,24 @@ void quadrat(int speed_, int lenght_)
     turnForDegrees('R', 90, timeForDegree, motorPins[0], motorPins[1], motorPins[2], motorPins[3], rightMotorSpeedPin, leftMotorSpeedPin);
 }
 
-void kreis() {}
+void kreis(int speed_, int radius_)
+{
+    circle(radius_, speed_, carWidth, motorPins[0], motorPins[1], motorPins[2], motorPins[3], rightMotorSpeedPin, leftMotorSpeedPin);
+}
 
-void slalom() {}
+void zickZack(int speed_, int lenght_)
+{
+    driveForDistance(speed_, lenght_, 'F', maxSpeed, motorPins[0], motorPins[1], motorPins[2], motorPins[3], rightMotorSpeedPin, leftMotorSpeedPin);
+    turnForDegrees('R', 90, timeForDegree, motorPins[0], motorPins[1], motorPins[2], motorPins[3], rightMotorSpeedPin, leftMotorSpeedPin);
+    driveForDistance(speed_, lenght_, 'F', maxSpeed, motorPins[0], motorPins[1], motorPins[2], motorPins[3], rightMotorSpeedPin, leftMotorSpeedPin);
+    turnForDegrees('L', 90, timeForDegree, motorPins[0], motorPins[1], motorPins[2], motorPins[3], rightMotorSpeedPin, leftMotorSpeedPin);
+    driveForDistance(speed_, lenght_, 'F', maxSpeed, motorPins[0], motorPins[1], motorPins[2], motorPins[3], rightMotorSpeedPin, leftMotorSpeedPin);
+    turnForDegrees('R', 90, timeForDegree, motorPins[0], motorPins[1], motorPins[2], motorPins[3], rightMotorSpeedPin, leftMotorSpeedPin);
+    driveForDistance(speed_, lenght_, 'F', maxSpeed, motorPins[0], motorPins[1], motorPins[2], motorPins[3], rightMotorSpeedPin, leftMotorSpeedPin);
+    turnForDegrees('L', 90, timeForDegree, motorPins[0], motorPins[1], motorPins[2], motorPins[3], rightMotorSpeedPin, leftMotorSpeedPin);
+}
 
+// ARDUINO CODE
 void setup()
 {
 }
